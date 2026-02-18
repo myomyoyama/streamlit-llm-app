@@ -16,32 +16,16 @@ import streamlit as st
 def ai_bot(user_input, selected_item):
     if selected_item == "数学の専門家":
         system_message = "あなたは数学の専門家です。入力されてくる質問に答えてください。"
-
-        messages = [
-        SystemMessage(content=system_message),
-        HumanMessage(content=user_input)
-        ]
-
-        if st.button("送信"):
-            if input_message:
-                result = llm(messages)
-                return result.content
-            else:
-                st.error("質問するテキストを入力してから「送信」ボタンを押してください。")
     else:
         system_message = "あなたは医療の専門家です。入力されてくる質問に答えてください。ただし、「一般的な情報提供のみ」「診断は行わない」でください。"
 
-        messages = [
-        SystemMessage(content=system_message),
-        HumanMessage(content=user_input)
-        ]
+    messages = [
+    SystemMessage(content=system_message),
+    HumanMessage(content=user_input)
+    ]
+    result = llm(messages)
+    return result.content
 
-        if st.button("送信"):
-            if input_message:
-                result = llm(messages)
-                return result.content
-            else:
-                st.error("質問するテキストを入力してから「送信」ボタンを押してください。")
 
 st.title("Q＆A AIチャットボット")
 
@@ -57,16 +41,13 @@ selected_item = st.radio(
 
 st.divider()
 
-label_genre = "私は" + selected_item + "です。数学について何でも聞いてください。"
+label_genre = "私は" + selected_item + "です。何でも聞いてください。"
 input_message = st.text_input(label=label_genre)
 
-if selected_item == "数学の専門家":
-    result = ai_bot(input_message, "数学の専門家")
-else:
-    result = ai_bot(input_message, "医療の専門家")
-
-if(result):
-    st.write(result)
-else:
-    st.write("質問を入力して「送信」ボタンを押してください。")
-
+if st.button("送信"):
+    if selected_item == "数学の専門家":
+        result_message = ai_bot(input_message, "数学の専門家")
+        st.write(result_message)
+    else:
+        result_message = ai_bot(input_message, "医療の専門家")
+        st.write(result_message)
